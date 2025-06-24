@@ -1,17 +1,19 @@
-import { useState } from "react"
+import { useState ,useEffect} from "react"
 import { APP_FEATURES } from "../utils/data"
 import { useNavigate } from "react-router-dom"
-useNavigate
 import { LuSparkles } from "react-icons/lu"
 import Modal from "../components/Modal.jsx"
 import Login from "../pages/Auth/login.jsx"
 import SignUp from "../pages/Auth/SignUp.jsx"
 
 
+
 const LandingPage = () => {
   const navigate = useNavigate()
   const [openAuthModal, setOpenAuthModal] = useState(false)
-  const [currentPage, setCurrentPage] = useState()
+  const [currentPage, setCurrentPage] = useState("login")
+  
+
   const handleCTA =()=>{
 
   }
@@ -99,16 +101,20 @@ const LandingPage = () => {
         Made With❤️...Happy Coding
       </div>
 
-      <Modal isOpen={openAuthModal}
-      onClose={()=>{
-        setOpenAuthModal(false)
-        setCurrentPage('login')
-      }} hideHeader>
-        <div>
-          {currentPage==="login"&&(<Login setCurrentPage={setCurrentPage}/>)}
-          {currentPage ==="signup"&&(<SignUp setCurrentPage={setCurrentPage}/>)}
-        </div>
-      </Modal>
+     <Modal isOpen={openAuthModal}
+  onClose={() => {
+    setOpenAuthModal(false)
+    setCurrentPage('login')
+  }} hideHeader>
+  <div key={currentPage}>
+    {currentPage === "login" && (
+      <Login setCurrentPage={setCurrentPage} />
+    )}
+    {currentPage === "signup" && (
+      <SignUp setCurrentPage={setCurrentPage} />
+    )}
+  </div>
+</Modal>
     </>
   )
 }

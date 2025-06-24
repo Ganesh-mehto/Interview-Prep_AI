@@ -5,7 +5,7 @@ const Modal = ({
 }) => {
     if (!isOpen) return null;
   return (
-    <div className='fixed inset-0 z-50 justify-center items-center w-full bg-black/40 '>
+    <div className='fixed inset-0 z-10 flex justify-center items-center w-full h bg-black/40 '>
         <div className={`relative flex flex-col bg-white shadow-lg rounded-lg overflow-hidden`}>
             {!hideHeader &&(
                 <div className='flex items-center justify-between p-4 border-b border-gray-200'>
@@ -13,8 +13,7 @@ const Modal = ({
                 </div>
             )}
             <button className='text-gray-400 bg-transparent hover:bg-orange-100 hover:text-gray-900 rounded-lg text-sm w-8 h-8 flex justify-center items-center absolute top-3.5 right-3.5 cursor-pointer' type='button' onClick={onClose}>
-                <svg className='w3
-                 h-3' aria-hidden='true'
+                <svg className='w-3 h-3' aria-hidden='true'
                 xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 14 14'>
                     <path stroke='currentColor' strokeLinecap='round' strokeLinejoin='round' 
                     strokeWidth='2' d='M1 1l6 6m0 6M7 1l6-6M7 7l-6 6'/>
