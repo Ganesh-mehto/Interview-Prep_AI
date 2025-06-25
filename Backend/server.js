@@ -4,6 +4,7 @@ const cors = require('cors');
 const path = require('path');
 const app = express();
 const connectDB = require('./config/db');
+const authRoutes = require('./routes/authRoutes.js');
 
 app.use(cors({
     origin: '*', // Adjust this to your frontend URL
@@ -12,6 +13,13 @@ app.use(cors({
 }));
 connectDB()
 app.use(express.json());
+
+app.use("/api/auth",authRoutes);
+// app.use('/api/sessions', sessionRoutes);
+// app.use('/api/questions', questionRoutes);
+// app.use('/api/ai/generate-questions',protect ,generateInterviewQuestions);
+// app.use('/api/ai/generate-explanations',protect ,generateExplanation);
+
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 
