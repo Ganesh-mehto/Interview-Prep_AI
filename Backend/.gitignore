@@ -50,3 +50,4 @@ pnpm-lock.yaml
 # Test output
 jest-html-reporters-*.html
 test-results/
+node_modules/
