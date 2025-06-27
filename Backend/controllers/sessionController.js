@@ -28,23 +28,39 @@ const createSession =async(req,res)=>{
         res.status(500).json({success:false,message:'server error'})
     }
 }
-const getMySession =async(res,req)=>{
+const getMySession =async(req,res)=>{
     try {
-        
+        const session=await Session.findOne({user:req.user.id}).sort({createdAt:-1}).populate("questions")
+        res.status(200).json(session)
     } catch (error) {
         res.status(500).json({success:false,message:'server error'})
     }
 }
-const getSessionById =async(res,req)=>{
+const getSessionById =async(req,res)=>{
     try {
-        
+        const session=await Session.findById(req.params.id).populate({path:"questions",
+            options:{sort:{isPinned:-1,createdAt:1}}
+        }).exec()
+        if(!session){
+            return res.status(404).json({success:false,message:"session not found"})
+        }
+        res.status(200).json({success:true,session})
     } catch (error) {
         res.status(500).json({success:false,message:'server error'})
     }
 }
-const deleteSession =async(res,req)=>{
+const deleteSession =async(req,res)=>{
     try {
-        
+        const session =await Session.findById(req.params.id)
+        if(!session){
+            return res.status(404).json({message:"session not found"})
+        }
+        if(session.user.toString()!==req.user.id){
+            return res.status(401).json({message:"not authorized to delete this session"})
+        }
+        await Question.deleteMany({session:session._id})
+        await session.deleteOne()
+        res.status(200).json({success:false,message:"session deleted successfully"})
     } catch (error) {
         res.status(500).json({success:false,message:'server error'})
     }
