@@ -37,9 +37,9 @@ const CreateSessionForm = () => {
             const generatedQuestions=aiResponse.data
             const response=await axiosInstance.post(API_PATHS.SESSION.CREATE,{
                 ...formData,
-                questions:data?._id
+                questions:generatedQuestions
             })
-            if(response.data?._id){
+            if(response.data?.session?._id){
                 navigate(`/interview-prep/${response.data?.session?._id}`)
             }
         } catch (error) {
@@ -49,7 +49,7 @@ const CreateSessionForm = () => {
                 setError('Something wenr wrong .Please try again')
             }
         }finally{
-            setFormData(true)
+            setIsLoading(true)
         }
     }
     return (
