@@ -1,21 +1,31 @@
-import { useState ,useEffect} from "react"
+import { useState, useEffect } from "react"
 import { APP_FEATURES } from "../utils/data"
 import { useNavigate } from "react-router-dom"
 import { LuSparkles } from "react-icons/lu"
 import Modal from "../components/Modal.jsx"
-import Login from "../pages/Auth/login.jsx"
+
 import SignUp from "../pages/Auth/SignUp.jsx"
+import Login from "./Auth/Login.jsx"
+import { useContext } from "react"
+import { UserContext } from "../context/userContext.jsx"
+import ProfileInfoCard from "../components/cards/ProfileInfoCard.jsx"
+
 
 
 
 const LandingPage = () => {
+  const { user } = useContext(UserContext)
   const navigate = useNavigate()
   const [openAuthModal, setOpenAuthModal] = useState(false)
   const [currentPage, setCurrentPage] = useState("login")
-  
 
-  const handleCTA =()=>{
 
+  const handleCTA = () => {
+    if (!user) {
+      setOpenAuthModal(true)
+    } else {
+      navigate('/dashboard')
+    }
   }
 
   return (
@@ -25,10 +35,11 @@ const LandingPage = () => {
         <div className="container mx-auto px-4 pt-6 pb-[200px] relative z-10">
           <header className="flex justify-between items-center mb-16 ">
             <div className="text-2xl text-black font-bold">Interview Prep AI</div>
-
-            <button className="bg-linear-to-r from-[#FF9324] to-[#e99a4b] text-medium px-7 py-2.5 rounded-full hover:bg-black hover:text-white border-white transition-colors cursor-pointer" onClick={() => setOpenAuthModal(true)}>
-              Login/Sign Up
-            </button>
+            {user ? (<ProfileInfoCard />) : (
+              <button className="bg-linear-to-r from-[#FF9324] to-[#e99a4b] text-medium px-7 py-2.5 rounded-full hover:bg-black hover:text-white border-white transition-colors cursor-pointer" onClick={() => setOpenAuthModal(true)}>
+                Login/Sign Up
+              </button>)
+            }
           </header>
           <div className="flex flex-col md:flex-row  items-center">
             <div className="w-full md:w-1/2 pr-4 mb-8 md:mb-0">
@@ -56,7 +67,7 @@ const LandingPage = () => {
       <div className="w-full min-h-full relative z-10 ">
         <div className="flex items-center justify-center -mt-36">
           <section className="">
-            <img  alt="hero Image" className="w-[80vw] rounded-lg" />
+            <img alt="hero Image" className="w-[80vw] rounded-lg" />
           </section>
         </div>
       </div>
@@ -101,20 +112,20 @@ const LandingPage = () => {
         Made With❤️...Happy Coding
       </div>
 
-     <Modal isOpen={openAuthModal}
-  onClose={() => {
-    setOpenAuthModal(false)
-    setCurrentPage('login')
-  }} hideHeader>
-  <div key={currentPage}>
-    {currentPage === "login" && (
-      <Login setCurrentPage={setCurrentPage} />
-    )}
-    {currentPage === "signup" && (
-      <SignUp setCurrentPage={setCurrentPage} />
-    )}
-  </div>
-</Modal>
+      <Modal isOpen={openAuthModal}
+        onClose={() => {
+          setOpenAuthModal(false)
+          setCurrentPage('login')
+        }} hideHeader>
+        <div key={currentPage}>
+          {currentPage === "login" && (
+            <Login setCurrentPage={setCurrentPage} />
+          )}
+          {currentPage === "signup" && (
+            <SignUp setCurrentPage={setCurrentPage} />
+          )}
+        </div>
+      </Modal>
     </>
   )
 }

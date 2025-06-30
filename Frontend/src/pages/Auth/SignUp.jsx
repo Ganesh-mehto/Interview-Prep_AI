@@ -4,6 +4,12 @@ import { useNavigate } from 'react-router-dom'
 import ProfilePhotoSelector from '../../components/inputs/profilePhotoSelector'
 import { isValidateEmail } from '../../utils/helper'
 import Input from '../../components/inputs/Input.jsx'
+import { useContext } from 'react'
+import { UserContext } from '../../context/userContext.jsx'
+import axiosInstance from '../../utils/axiosInstance.js'
+import { API_PATHS } from '../../utils/apiPath.js'
+import uploadImage from '../../utils/uploadImage.js'
+
 
 const SignUp = ({setCurrentPage}) => 
   {
@@ -13,6 +19,7 @@ const SignUp = ({setCurrentPage}) =>
   const [password, setPassword] = useState('')
   const [error, setError] = useState(null)
   const navigate = useNavigate()
+  const {updateUser}=useContext(UserContext)
   const handleSignUp = async (e) => {
     e.preventDefault()
      let profileImageUrl = ''
@@ -30,7 +37,19 @@ const SignUp = ({setCurrentPage}) =>
      }
      setError('')
    try{
-
+    if(profilePic){
+      const imgUploadRes=await uploadImage(profilePic)
+      profileImageUrl=imgUploadRes.imageUrl || ""
+    }
+    const response= await axiosInstance.post(API_PATHS.AUTH.REGISTER,{name:fullName,
+      email,password,profileImageUrl,
+    })
+    const {token}=response.token
+    if(token){
+      localStorage.setItem("token",token)
+      updateUser(response.data)
+      navigate("/dashboard")
+    }
   }catch(error){
     if(error.response && error.response.data) {setError(error.response.data.message)}
     else {setError('An error occurred during login. Please try again later.')}

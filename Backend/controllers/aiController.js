@@ -7,7 +7,7 @@ const ai=new GoogleGenAI({apiKey:process.env.GEMINI_API_KEY})
 const generateInterviewQuestions =async(req, res)=>{
     try {
         const {role,experience,topicsToFocus,numberOfQuestions}=req.body
-        if(!role ||!topicsToFocus || !numberOfQuestions || !experience){
+        if(!role || !experience || !topicsToFocus || !numberOfQuestions ){
             return res.status(400).json({message:"Missing required fields"})
         }
         const prompt =questionAnswerPrompt(role,experience,topicsToFocus,numberOfQuestions)

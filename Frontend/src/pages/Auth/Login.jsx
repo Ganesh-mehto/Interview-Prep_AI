@@ -2,11 +2,15 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Input from '../../components/inputs/Input.jsx'
 import { isValidateEmail } from '../../utils/helper.js'
+import axiosInstance from '../../utils/axiosInstance.js'
+import { API_PATHS } from '../../utils/apiPath.js'
+import { UserContext } from '../../context/userContext.jsx'
 
 const Login = ({setCurrentPage}) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')    
   const [error, setError] = useState(null)
+  const {updateUser} =UserContext(UserContext)
   const navigate = useNavigate()
 
   const handleLogin = async (e) => {
@@ -22,6 +26,13 @@ const Login = ({setCurrentPage}) => {
     setError('')
     try{
       // Your login logic here
+      const response=await axiosInstance.post(API_PATHS.AUTH.LOGIN,{email,password})
+      const {token}=response.data
+      if(token){
+        localStorage.setItem("token",token)
+        updateUser(response.data)
+        navigate("/dashboard")
+      }
     }catch(error){
       if(error.response && error.response.data) {
         setError(error.response.data.message)
