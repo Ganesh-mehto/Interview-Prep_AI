@@ -3,10 +3,10 @@ import { useNavigate } from 'react-router-dom'
 import Input from "../../components/inputs/Input"
 import SpinnerLoader from '../../components/loader/SpinnerLoader'
 import axiosInstance from '../../utils/axiosInstance'
-import { API_PATHS } from '../../utils/apiPath'
+import { API_PATHS } from '../../utils/apiPaths'
 
 const CreateSessionForm = () => {
-    const { formData, setFormData } = useState({
+    const [formData, setFormData ] = useState({
         role: "",
         experience: "",
         topicsToFocus: "",
@@ -31,7 +31,7 @@ const CreateSessionForm = () => {
         setError('')
         setIsLoading(true)
         try {
-            const aiResponse=await axiosInstance.post(API_PATHS.AI.GENERATE_QUESTION,{
+            const aiResponse=await axiosInstance.post(API_PATHS.AI.GENERATE_QUESTIONS,{
                 role,experience,topicsToFocus,numberOfQuestions:10,
             })
             const generatedQuestions=aiResponse.data
@@ -46,10 +46,10 @@ const CreateSessionForm = () => {
             if(error.response && error.response.data.message){
                 setError(error.response.data.message)
             }else{
-                setError('Something wenr wrong .Please try again')
+                setError('Something went wrong. Please try again')
             }
         }finally{
-            setIsLoading(true)
+            setIsLoading(false)
         }
     }
     return (
@@ -65,13 +65,13 @@ const CreateSessionForm = () => {
                     onChange={({ target }) => { handleChange("role", target.value) }
                     }
                     lable="Target Role"
-                    placeholder="{e.g., Frontend Backend etc}"
+                   placeholder="e.g., Frontend Backend etc"
                     type="text"
                 />
                  <Input value={formData.experience}
                     onChange={({ target }) => { handleChange("experience", target.value) }
                     }
-                    lable="Years of experience"
+                    label="Years of experience"
                     placeholder="{e.g., 1 year, 3 year etc}"
                     type="number"
                 />

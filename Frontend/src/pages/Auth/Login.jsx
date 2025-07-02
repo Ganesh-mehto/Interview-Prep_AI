@@ -1,16 +1,16 @@
-import React, { useState } from 'react'
+import React, { useState ,useContext} from 'react'
 import { useNavigate } from 'react-router-dom'
 import Input from '../../components/inputs/Input.jsx'
 import { isValidateEmail } from '../../utils/helper.js'
 import axiosInstance from '../../utils/axiosInstance.js'
-import { API_PATHS } from '../../utils/apiPath.js'
+import { API_PATHS } from '../../utils/apiPaths.js'
 import { UserContext } from '../../context/userContext.jsx'
 
 const Login = ({setCurrentPage}) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')    
   const [error, setError] = useState(null)
-  const {updateUser} =UserContext(UserContext)
+   const { updateUser } = useContext(UserContext);
   const navigate = useNavigate()
 
   const handleLogin = async (e) => {

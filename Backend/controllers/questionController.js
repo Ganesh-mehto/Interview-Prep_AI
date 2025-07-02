@@ -4,7 +4,7 @@ const Session =require('../models/Session')
 const addQuestionsToSession=async(req,res)=>{
     try {
         const {sessionId,questions}=req.body
-        if(!sessionId || !Array.isArray(questions)){
+        if(!sessionId || !questions || !Array.isArray(questions)){
             return res.status(400).json({message:"Invaild input data"})
         }
         const session =await Session.findById(sessionId)
@@ -38,7 +38,7 @@ const togglePinQuestion=async(req,res)=>{
         res.status(500).json({message:"server error"})
     }
 }
-const uploadQuestionNote=async(req,res)=>{
+const updateQuestionNote=async(req,res)=>{
     try {
        const {note}=req.body
        const question=await Question.findById(req.params.id)
@@ -53,4 +53,4 @@ const uploadQuestionNote=async(req,res)=>{
     }
 }
 
-module.exports={addQuestionsToSession,togglePinQuestion,uploadQuestionNote}
+module.exports={addQuestionsToSession,togglePinQuestion,updateQuestionNote}

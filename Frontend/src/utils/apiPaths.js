@@ -9,18 +9,18 @@ export const API_PATHS={
         UPLOAD_IMAGE:"/api/auth/upload-image",
     },
     AI:{
-        GENERATE_QUESTION:"/api/ai/generate-questions",
+        GENERATE_QUESTIONS:"/api/ai/generate-questions",
         GENERATE_EXPLANATION:"/api/ai/generate-explanation",
     },
     SESSION:{
-        CREATE:"/api/session/create",
-        GET_ALL:"/api/session/my-session",
-        GET_ONE:(id)=>`/api/session/${id}`,
-        DELETE:(id)=>`/api/session/${id}`
+        CREATE:"/api/sessions/create",
+        GET_ALL:"/api/sessions/my-sessions",
+        GET_ONE:(id)=>`/api/sessions/${id}`,
+        DELETE:(id)=>`/api/sessions/${id}`
     },
     QUESTION:{
-        ADD_TO_SESSION:"/api/question/add",
-        PIN:(id)=>`/api/questions/add/${id}/pin`,
+        ADD_TO_SESSION:"/api/questions/add",
+        PIN:(id)=>`/api/questions/${id}/pin`,
         UPDATE_NOTE:(id)=>`/api/questions/${id}/note`
     },
 }

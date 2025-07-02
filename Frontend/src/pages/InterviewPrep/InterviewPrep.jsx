@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import moment, { duration } from 'moment'
+// import moment, { duration } from 'moment'
 import {AnimatePresence,delay,motion, scale} from "framer-motion"
 import { LuCircleAlert,LuListCollapse } from 'react-icons/lu'
 import SpinnerLoader from '../../components/loader/SpinnerLoader'
@@ -8,8 +8,11 @@ import {toast} from "react-hot-toast"
 import DashBoardLayout from '../../components/layouts/DashBoardLayout'
 import RoleInfoHeader from './components/RoleInfoHeader'
 import axiosInstance from '../../utils/axiosInstance'
-import { API_PATHS } from '../../utils/apiPath'
+import { API_PATHS } from '../../utils/apiPaths'
 import QuestionCard from '../../components/cards/QuestionCard  '
+import AIResponsePreview from './components/AIResponsePreview'
+import Drawer from '../../components/Drawer'
+import SkeletonLoader from '../../components/loader/SkeletonLoader'
 const InterviewPrep = () => {
   const {sessionId}=useParams()
   const [sessionData,setSessionData]=useState(null)
@@ -30,13 +33,59 @@ const InterviewPrep = () => {
     }
   }
   const generateConceptExplanation=async(question)=>{
-
+    try {
+      setErrorMsg('')
+      setExplanation(null)
+      setIsLoading(true)
+      setOpenLearnMoreDrawer(true)
+      const response =await axiosInstance.post(API_PATHS.AI.GENERATE_EXPLANATION,{question,})
+      if(response.data){
+        setExplanation(response.data)
+      }
+    } catch (error) {
+      setExplanation(null)
+      setErrorMsg("Failed to generate explanation,try again")
+      console.error("Error:",error)
+    }finally{
+      setIsLoading(false)
+    }
   }
-  const toggleMoreQuestions=async()=>{
-
+  const toggleQuestionPinStatus=async(questionId)=>{
+    try {
+      const response=await axiosInstance.post(API_PATHS.QUESTION.PIN(questionId))
+      console.log(response)
+      if(response.data && response.data.question){
+        fetchSessionDetailsById
+      }
+    } catch (error) {
+      console.error("Error:",error)
+    }
   }
   const uploadMoreQuestions=async()=>{
+    try {
+      setIsUpdateLoader(true)
+      const aiResponse=await axiosInstance.post(API_PATHS.AI.GENERATE_QUESTION,{
+        role:sessionData?.role,
+        experience:sessionData?.experience,
+        topicsToFocus:sessionData?.topicsToFocus,
+        numberOfQuestions:10
+      })
+      const generatedQuestions=aiResponse.data
+      const response =await axiosInstance.post(API_PATHS.QUESTION.ADD_TO_SESSION,{sessionId,questions:generatedQuestions,})
+      if(response.data){
+        toast.success("Added More Q&A")
+        fetchSessionDetailsById()
+      }
+    } catch (error) {
+      if(error.response && error.response.data.message){
+        setErrorMsg(error.response.data.message)
 
+      }else{
+        setErrorMsg("something went wrong . try again")
+      }
+    }finally{
+      setIsUpdateLoader(false)
+    }
   }
   useEffect(()=>{
     if(sessionId){
@@ -86,12 +135,41 @@ const InterviewPrep = () => {
                         isPinned={data?.isPinned}
                         onTogglePin={()=>toggleQuestionPinStatus(data._id)}
                       />
-                    </>
+                    
+                    {!isLoading && sessionData?.questions?.length == index +1 && (
+                      <div className="flex items-center justify-center mt-5"> 
+                      <button className="flex items-center gap-3 text-sm text-white font-medium bg-black px-5 py-2 mr2
+                       rounded text-nowrap cursor-pointer" disabled={isLoading || isUpdateLoader} onClick={uploadMoreQuestions}
+                      >
+                        {
+                          isUpdateLoader ?(<SpinnerLoader />):(<LuListCollapse className="text-lg"/>)
+                        }{''}
+                        Load More
+                        </button>
+                      </div>
+                    )}
+                  </>
                   </motion.div>
                 )
               })}
             </AnimatePresence>
           </div>
+        </div>
+
+        <div>
+          <Drawer isOpen={openLearnMoreDrawer} 
+          onClose={()=>setOpenLearnMoreDrawer(false)}
+          title={!isLoading && explanation?.title}>
+            {errorMsg && (
+              <p className="flex gap-2 text-sm text-amber-600 font-medium">
+                <LuCircleAlert className=" mt-1"/>{errorMsg}
+              </p>
+          )}
+          {isLoading && <SkeletonLoader/>}
+          {!isLoading && explanation && (
+            <AIResponsePreview content={explanation?.explanation}/>
+          )}
+          </Drawer>
         </div>
       </div>
     </DashBoardLayout>

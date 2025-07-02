@@ -7,7 +7,7 @@ import Input from '../../components/inputs/Input.jsx'
 import { useContext } from 'react'
 import { UserContext } from '../../context/userContext.jsx'
 import axiosInstance from '../../utils/axiosInstance.js'
-import { API_PATHS } from '../../utils/apiPath.js'
+import { API_PATHS } from '../../utils/apiPaths.js'
 import uploadImage from '../../utils/uploadImage.js'
 
 

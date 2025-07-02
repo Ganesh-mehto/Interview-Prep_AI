@@ -6,7 +6,7 @@ const createSession =async(req,res)=>{
         const {role,experience,topicsToFocus,description,questions}=req.body
         const userId=req.user._id
         const session=await Session.create({
-            usser:userId,
+            user:userId,
             role,
             experience,
             topicsToFocus,
@@ -28,10 +28,10 @@ const createSession =async(req,res)=>{
         res.status(500).json({success:false,message:'server error'})
     }
 }
-const getMySession =async(req,res)=>{
+const getMySessions =async(req,res)=>{
     try {
-        const session=await Session.findOne({user:req.user.id}).sort({createdAt:-1}).populate("questions")
-        res.status(200).json(session)
+        const sessions=await Session.find({user:req.user.id}).sort({createdAt:-1}).populate("questions")
+       res.status(200).json({ success: true, sessions: sessions })
     } catch (error) {
         res.status(500).json({success:false,message:'server error'})
     }
@@ -60,9 +60,9 @@ const deleteSession =async(req,res)=>{
         }
         await Question.deleteMany({session:session._id})
         await session.deleteOne()
-        res.status(200).json({success:false,message:"session deleted successfully"})
+        res.status(200).json({success:true,message:"session deleted successfully"})
     } catch (error) {
         res.status(500).json({success:false,message:'server error'})
     }
 }
-module.exports={createSession,getMySession,getSessionById,deleteSession}
+module.exports={createSession,getMySessions,getSessionById,deleteSession}
