@@ -21,7 +21,8 @@ const registerUser = async (req, res) => {
             password:hashPassword,
             profileImageUrl,
         })
-         res.status(201).json({_id:user.id,
+         res.status(201).json({
+            _id:user._id,
             name:user.name,
             email:user.email,
             profileImageUrl:user.profileImageUrl,
@@ -37,7 +38,7 @@ const loginUser = async (req, res) => {
     try {
         const {email,password}=req.body
         const user =await User.findOne({email})
-        if(!email){
+        if(!user){
             return res.status(500).json({message:"Invaild email or password"})
         }
         const isMatch =await  bcrypt.compare(password,user.password)
@@ -45,7 +46,7 @@ const loginUser = async (req, res) => {
              return res.status(500).json({message:"Invaild email or password"})
         }
         res.json({
-            _id:user.id,
+            _id:user._id,
             name:user.name,
             email:user.email,
             profileImageUrl:user.profileImageUrl,

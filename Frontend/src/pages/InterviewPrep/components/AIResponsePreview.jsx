@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { LuCopy,LuCheck,LuCode } from 'react-icons/lu'
 import ReactMarkDown from "react-markdown"
 import remarkGfm from "remark-gfm"
-import {Prism as SynataxHighlighter} from 'react-syntax-highlighter'
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism'
 const AIResponsePreview = ({content}) => {
     if(!content) return null
@@ -11,9 +11,9 @@ const AIResponsePreview = ({content}) => {
         <div className="text-[14px] prose prose-slate dark:prose-invert max-w-none">
             <ReactMarkDown 
             remarkPlugins={[remarkGfm]}
-            component={{
+            components={{
                 code({node,className,children,...props}){
-                    const match=/language-(\w+)/.exex(className || '')
+                    const match=/language-(\w+)/.exec(className || '')
                     const language =match ? match[1] : ""
                     const isInLine =!className
                     return !isInLine ?(
@@ -133,32 +133,31 @@ function CodeBlock({code,language}){
         setCopied(true)
         setTimeout(()=>setCopied(false),2000)
     }
-    return (
-    <div className="relative my-6 rounded-lg overflow-hidden bg-gray-50 border border-gray-200">
-        <div className="flex items-center justify-between px-4 py-2 bg-gray-50 border border-gray-200">
+    return  <div className="relative my-6 rounded-lg overflow-hidden bg-gray-50 border border-gray-200">
+        <div className="flex items-center justify-between px-4 py-2 bg-gray-100 border-b border-gray-200">
             <div className="flex items-center space-x-2">
                 <LuCode size={16} className="text-gray-500"/>
                 <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
                     {language || 'code'}
                 </span>
             </div>
-            <button onClick={copyCode} className="text-gray-500 hover:text-gray-700 focus:outline-none relative group" aria-lable= "Copt Code">
+            <button onClick={copyCode} className="text-gray-500 hover:text-gray-700 focus:outline-none relative group" aria-label="Copy Code">
                 {copied ? (<LuCheck size={16} className="text-green-600"/>):(<LuCopy size={16}/>)}
                 {
-                    copied && (<span className="absolute -top-8 right-0 bg-black text-white text-xs rounded-md px-2 py-1 optional-80 group-hover:opacity-100 transition">
+                    copied && (<span className="absolute -top-8 right-0 bg-black text-white text-xs rounded-md px-2 py-1 optacity-80 group-hover:opacity-100 transition">
                         Copied!
                     </span>)
                 }
             </button>
         </div>
 
-        <SynataxHighlighter language={language} 
+        <SyntaxHighlighter language={language} 
         style={oneLight}
         customStyle={{fontSize:12.5,margin:0,padding:'1rem',background:'transparent'}}>
             {code}
-        </SynataxHighlighter>
+        </SyntaxHighlighter>
     </div>
-    )
+    
 }
 
 export default AIResponsePreview

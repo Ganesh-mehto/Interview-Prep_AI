@@ -11,6 +11,7 @@ import { API_PATHS } from '../../utils/apiPaths.js'
 import uploadImage from '../../utils/uploadImage.js'
 
 
+
 const SignUp = ({setCurrentPage}) => 
   {
   const [profilePic, setProfilePic] = useState(null)
@@ -31,7 +32,7 @@ const SignUp = ({setCurrentPage}) =>
        setError('Please enter a valid email address')
        return
      }
-     if (!password) {
+     if (!password || password.length < 8) {
        setError('Password must be at least 8 characters long')
        return
      }
@@ -44,7 +45,7 @@ const SignUp = ({setCurrentPage}) =>
     const response= await axiosInstance.post(API_PATHS.AUTH.REGISTER,{name:fullName,
       email,password,profileImageUrl,
     })
-    const {token}=response.token
+    const { token } = response.data
     if(token){
       localStorage.setItem("token",token)
       updateUser(response.data)

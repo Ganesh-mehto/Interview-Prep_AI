@@ -1,14 +1,14 @@
 import React from 'react'
 
 const RoleInfoHeader = ({
-    role,topicToFocus,experience,questions,description,lastUpdated,
+    role,topicToFocus,experience,questions,lastUpdated,
 }) => {
   return (
     <div className="bg-white relative">
         <div className="container mx-auto px-10 md:px-0">
             <div className="h-[200px] flex flex-col justify-center relative z-10">
                 <div className="flex items-start">
-                    <div className="flex-frow">
+                    <div className="flex-grow">
                         <div className="flex justify-between items-start">
                             <div>
                                 <h2 className="text-2xl font-medium">
@@ -34,10 +34,10 @@ const RoleInfoHeader = ({
                 </div>
             </div>
             <div className="w-[40vw] md:w-[30vw] h-[200px] flex items-center justify-center bg-white overflow-hidden absolute top-0 right-0">
-                <div className="w-16 bg-lime-400 blur-[65px] animate-blob1"/>
-                <div className="w-16 bg-teal-400 blur-[65px] animate-blob1"/>
-                <div className="w-16 bg-cyan-300 blur-[65px] animate-blob1"/>
-                <div className="w-16 bg-fuchsia-200 blur-[65px] animate-blob1"/>
+                <div className="w-16 h-16 bg-lime-400 blur-[65px] animate-blob1"/>
+                <div className="w-16 h-16 bg-teal-400 blur-[65px] animate-blob1"/>
+                <div className="w-16 h-16 bg-cyan-300 blur-[65px] animate-blob1"/>
+                <div className="w-16 h-16 bg-fuchsia-200 blur-[65px] animate-blob1"/>
             </div>
         </div>
     </div>

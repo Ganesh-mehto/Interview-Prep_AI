@@ -3,15 +3,12 @@ import { APP_FEATURES } from "../utils/data"
 import { useNavigate } from "react-router-dom"
 import { LuSparkles } from "react-icons/lu"
 import Modal from "../components/Modal.jsx"
-
+import heroImage from "../assets/hero-image.png";
 import SignUp from "../pages/Auth/SignUp.jsx"
 import Login from "./Auth/Login.jsx"
 import { useContext } from "react"
 import { UserContext } from "../context/userContext.jsx"
 import ProfileInfoCard from "../components/cards/ProfileInfoCard.jsx"
-
-
-
 
 const LandingPage = () => {
   const { user } = useContext(UserContext)
@@ -67,7 +64,7 @@ const LandingPage = () => {
       <div className="w-full min-h-full relative z-10 ">
         <div className="flex items-center justify-center -mt-36">
           <section className="">
-            <img alt="hero Image" className="w-[80vw] rounded-lg" />
+            <img src={heroImage} alt="hero Image" className="w-[80vw] rounded-lg object-contain" />
           </section>
         </div>
       </div>

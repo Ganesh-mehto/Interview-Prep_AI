@@ -6,7 +6,7 @@ import axiosInstance from '../../utils/axiosInstance'
 import { API_PATHS } from '../../utils/apiPaths'
 
 const CreateSessionForm = () => {
-    const [formData, setFormData ] = useState({
+    const [formData, setFormData] = useState({
         role: "",
         experience: "",
         topicsToFocus: "",
@@ -31,24 +31,28 @@ const CreateSessionForm = () => {
         setError('')
         setIsLoading(true)
         try {
-            const aiResponse=await axiosInstance.post(API_PATHS.AI.GENERATE_QUESTIONS,{
-                role,experience,topicsToFocus,numberOfQuestions:10,
+            const aiResponse = await axiosInstance.post(API_PATHS.AI.GENERATE_QUESTIONS, {
+                role, experience, topicsToFocus, numberOfQuestions: 10,
             })
-            const generatedQuestions=aiResponse.data
-            const response=await axiosInstance.post(API_PATHS.SESSION.CREATE,{
+            let generatedQuestions = aiResponse.data.questions || aiResponse.data.result || aiResponse.data;
+if (typeof generatedQuestions === "string") {
+  generatedQuestions = [generatedQuestions];
+}
+
+            const response = await axiosInstance.post(API_PATHS.SESSION.CREATE, {
                 ...formData,
-                questions:generatedQuestions
-            })
-            if(response.data?.session?._id){
+                questions: generatedQuestions
+            });
+            if (response.data?.session?._id) {
                 navigate(`/interview-prep/${response.data?.session?._id}`)
             }
         } catch (error) {
-            if(error.response && error.response.data.message){
+            if (error.response && error.response.data.message) {
                 setError(error.response.data.message)
-            }else{
+            } else {
                 setError('Something went wrong. Please try again')
             }
-        }finally{
+        } finally {
             setIsLoading(false)
         }
     }
@@ -64,28 +68,28 @@ const CreateSessionForm = () => {
                 <Input value={formData.role}
                     onChange={({ target }) => { handleChange("role", target.value) }
                     }
-                    lable="Target Role"
-                   placeholder="e.g., Frontend Backend etc"
+                    label="Target Role"
+                    placeholder="e.g., Frontend Backend etc"
                     type="text"
                 />
-                 <Input value={formData.experience}
+                <Input value={formData.experience}
                     onChange={({ target }) => { handleChange("experience", target.value) }
                     }
                     label="Years of experience"
                     placeholder="{e.g., 1 year, 3 year etc}"
                     type="number"
                 />
-                 <Input value={formData.topicsToFocus}
+                <Input value={formData.topicsToFocus}
                     onChange={({ target }) => { handleChange("topicsToFocus", target.value) }
                     }
-                    lable="Topics to Focus on"
+                    label="Topics to Focus on"
                     placeholder="{e.g., HTML , CSS, JavaScript etc}"
                     type="text"
                 />
-                 <Input value={formData.description}
+                <Input value={formData.description}
                     onChange={({ target }) => { handleChange("description", target.value) }
                     }
-                    lable="Description"
+                    label="Description"
                     placeholder="{Any specific gaol or notes for this session"
                     type="text"
                 />
@@ -96,8 +100,8 @@ const CreateSessionForm = () => {
                 }
 
                 <button type='submit' className="btn-primary w-full mt-2"
-                disabled={isLoading}>
-                  {isLoading && <SpinnerLoader/>}  Create Session
+                    disabled={isLoading}>
+                    {isLoading && <SpinnerLoader />}  Create Session
                 </button>
             </form>
         </div>

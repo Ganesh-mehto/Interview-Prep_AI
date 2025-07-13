@@ -31,7 +31,7 @@ const createSession =async(req,res)=>{
 const getMySessions =async(req,res)=>{
     try {
         const sessions=await Session.find({user:req.user.id}).sort({createdAt:-1}).populate("questions")
-       res.status(200).json({ success: true, sessions: sessions })
+       res.status(200).json({ success: true, sessions})
     } catch (error) {
         res.status(500).json({success:false,message:'server error'})
     }
@@ -49,20 +49,23 @@ const getSessionById =async(req,res)=>{
         res.status(500).json({success:false,message:'server error'})
     }
 }
-const deleteSession =async(req,res)=>{
+const deleteSession = async (req, res) => {
     try {
-        const session =await Session.findById(req.params.id)
-        if(!session){
-            return res.status(404).json({message:"session not found"})
+         
+        const session = await Session.findById(req.params.id)
+        if (!session) {
+            return res.status(404).json({ message: "session not found" });
         }
-        if(session.user.toString()!==req.user.id){
-            return res.status(401).json({message:"not authorized to delete this session"})
+        // Use _id for user comparison
+        if (session.user.toString() !== req.user.id) {
+            return res.status(401).json({ message: "not authorized to delete this session" });
         }
-        await Question.deleteMany({session:session._id})
-        await session.deleteOne()
-        res.status(200).json({success:true,message:"session deleted successfully"})
+        await Question.deleteMany({ session: session._id });
+        await session.deleteOne();
+        res.status(200).json({ success: true, message: "session deleted successfully" });
     } catch (error) {
-        res.status(500).json({success:false,message:'server error'})
+        console.error(error); // Add this for debugging
+        res.status(500).json({ success: false, message: 'server error' });
     }
 }
 module.exports={createSession,getMySessions,getSessionById,deleteSession}

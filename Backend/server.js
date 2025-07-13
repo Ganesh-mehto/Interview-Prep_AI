@@ -10,7 +10,7 @@ const sessionRoutes = require('./routes/sessionRoutes');
 const questionRoutes = require('./routes/questionRoutes');
 
 const {generateConceptExplanation,generateInterviewQuestions}=require('./controllers/aiController')
-const {protect} =require('./middlewares/authMiddleware')
+const protect =require('./middlewares/authMiddleware')
 
 app.use(cors({
     origin: '*', // Adjust this to your frontend URL
@@ -22,8 +22,7 @@ connectDB()
 app.use(express.json());
 
 app.use("/api/auth",authRoutes);
-app.use('/api/sessions', sessionRoutes
-);
+app.use('/api/sessions', sessionRoutes);
 app.use('/api/questions', questionRoutes);
 
 app.use('/api/ai/generate-questions', protect, generateInterviewQuestions);
