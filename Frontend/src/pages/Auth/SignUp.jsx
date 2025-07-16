@@ -1,7 +1,7 @@
 
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import ProfilePhotoSelector from '../../components/inputs/profilePhotoSelector'
+import ProfilePhotoSelector from '../../components/inputs/ProfilePhotoSelector.jsx'
 import { isValidateEmail } from '../../utils/helper'
 import Input from '../../components/inputs/Input.jsx'
 import { useContext } from 'react'
